@@ -1,0 +1,37 @@
+name: Deploy to Cloudflare pages
+
+on:
+  # Run this workflow whenever a new commit is pushed to main.
+  push: {}
+  # Run this workflow once per day, at 10:15 UTC
+#   schedule: [{cron: "15 10 * * *"}]
+  # Run this workflow when triggered manually in GitHub’s UI.
+  workflow_dispatch: {}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    name: Publish to Cloudflare Pages
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: intro-ppl
+          directory: dist
+          # Optional: Enable this if you want to have GitHub Deployments triggered
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Change the Wrangler version, allows you to point to a specific version or a tag such as `beta`
+        #   wranglerVersion: '3'
