@@ -699,11 +699,9 @@ function argMax(array) {
 ```js
 const nGrid = 500
 ```
-
-% iFrame
-
+<!-- 
 ```js
 const observer = new ResizeObserver(([entry]) => parent.postMessage({height: entry.target.offsetHeight}, "*"));
 observer.observe(document.documentElement);
 invalidation.then(() => observer.disconnect());
-```
+``` -->
